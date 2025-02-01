@@ -108,6 +108,55 @@ To keep PHP-FPM running as a service:
 
 ### Issue 1: 502 Bad Gateway Error
 - **Problem**: Nginx cannot connect to PHP-FPM, resulting in a 502 Bad Gateway error.
+- 
+### Step 1: Install Required Software
+We need to install PHP, MySQL, Nginx, and WordPress on your Windows machine.
+
+### 1.1 Install PHP
+Download the latest Non-Thread Safe version of PHP from PHP for Windows.
+
+Extract the ZIP file to C:\php.
+
+### Rename php.ini-development to php.ini.
+
+Open php.ini in Notepad and uncomment the following lines by removing ;:
+
+```bash
+extension=curl
+extension=gd
+extension=mbstring
+extension=mysqli
+extension=openssl
+extension=pdo_mysql
+```
+### Add PHP to your system environment variables:
+
+Open Control Panel > System > Advanced System Settings > Environment Variables.
+Under "System Variables", find Path, click Edit, and add C:\php.
+Test PHP installation:
+
+Open Command Prompt (cmd) and type:
+```bash
+php -v
+```
+It should show the installed PHP version.
+
+
+1.2 Install MySQL
+### Download MySQL Community Edition from MySQL Downloads.
+Install MySQL with default settings.
+Set up a root password and note it down.
+Open MySQL command-line client and create a WordPress database:
+sql
+```bash
+CREATE DATABASE wordpress;
+CREATE USER 'wp_user'@'localhost' IDENTIFIED BY 'yourpassword';
+GRANT ALL PRIVILEGES ON wordpress.* TO 'wp_user'@'localhost';
+FLUSH PRIVILEGES;
+```
+
+
+
 - **Solution**:
   - Ensure PHP-FPM is running by checking the **Services Manager**.
   - Verify that `fastcgi_pass` in Nginx is pointing to `127.0.0.1:9000` (the correct PHP-FPM port).
