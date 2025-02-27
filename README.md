@@ -83,6 +83,46 @@ To keep PHP-FPM running as a service:
         }
     }
     ```
+Add this is nginx.conf
+```bash
+#user  nobody;
+worker_processes  1;
+
+#error_log  logs/error.log;
+#error_log  logs/error.log  notice;
+#error_log  logs/error.log  info;
+
+#pid        logs/nginx.pid;
+
+events {
+    worker_connections  1024;
+}
+
+http {
+    include       mime.types;
+    default_type  application/octet-stream;
+    include C:\\nginx\\conf\\wordpress.conf;  # Use double backslashes here
+
+    sendfile        on;
+    keepalive_timeout  65;
+
+    server {
+        listen       8080;
+        server_name  localhost;
+
+        location / {
+            root   html;
+            index  index.html index.htm;
+        }
+
+        error_page   500 502 503 504  /50x.html;
+        location = /50x.html {
+            root   html;
+        }
+    }
+}
+
+```
     Replace `C:/path/to/your/wordpress/directory` with the path to your WordPress application.
 3. Restart Nginx to apply the changes:
     ```bash
@@ -128,6 +168,7 @@ extension=mbstring
 extension=mysqli
 extension=openssl
 extension=pdo_mysql
+extension=mysqli
 ```
 ### Add PHP to your system environment variables:
 
