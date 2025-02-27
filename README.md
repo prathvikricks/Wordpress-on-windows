@@ -59,6 +59,58 @@ To keep PHP-FPM running as a service:
 6. Verify the PHP-FPM service is running:
     - Open **Services Manager** (`services.msc`), find **PHP-FPM**, and ensure it is set to **Automatic**.
 
+
+### OR
+
+## Steps to Set Up PHP-CGI as a Background Task Using Task Scheduler:
+# Create a Task to Run PHP-CGI on Startup:
+
+## Press Windows Key + R, type taskschd.msc, and press Enter to open Task Scheduler.
+# In the Actions pane, click Create Task to open the Create Task window.
+General Tab:
+
+## Name the task, e.g., "Run PHP-CGI".
+# Under Security Options, choose Run with highest privileges (this ensures the task runs with administrative rights).
+# Select Configure for: Windows 10 (or whatever version you're using).
+# Triggers Tab:
+
+## Click New to add a new trigger.
+# Set Begin the task to At startup. This ensures that PHP-CGI starts when the machine boots up.
+# You can also configure other options like Delay task for if necessary, but this is optional.
+# Actions Tab:
+
+## Click New to create a new action.
+# Set Action to Start a program.
+# In the Program/script field, browse to php-cgi.exe. This will typically be located in your PHP installation folder, e.g., 
+```bash
+C:\php\php-cgi.exe.
+```
+# In the Add arguments (optional) field, add the necessary parameters:
+# css
+```bash
+ -b 127.0.0.1:9000
+```
+# This starts PHP-CGI and binds it to the specified IP and port.
+# Conditions Tab:
+
+## You can configure conditions here if you want to run the task only when certain conditions are met, like when the machine is idle. However, for a PHP service, it’s usually fine to leave 
+# this tab empty.
+# Settings Tab:
+
+## Enable Allow task to be run on demand.
+# Enable If the task fails, restart every X minutes. Set this to 1 minute or a value that fits your needs. This will make sure that PHP-CGI automatically restarts if it crashes.
+# You can also configure the Stop the task if it runs longer than setting to prevent it from running indefinitely if something goes wrong.
+# Finish Setup:
+
+# Click OK to save the task.
+# You will be prompted to enter your administrator password if necessary, as you chose to run the task with elevated privileges.
+# Test the Task:
+
+# To test it, you can either restart your computer, or manually run the task from Task Scheduler:
+# In the Task Scheduler, find your task on the left pane under Task Scheduler Library.
+# Right-click the task and click Run to see if PHP-CGI starts successfully.
+
+
 ## Step 4: Configure Nginx to Use PHP-FPM
 
 1. Open the Nginx configuration file `nginx.conf` or create a new file (e.g., `wordpress.conf`) in the `C:\nginx\conf\` folder.
