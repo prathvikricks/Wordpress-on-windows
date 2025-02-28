@@ -110,6 +110,38 @@ To test it, you can either restart your computer, or manually run the task from 
 In the Task Scheduler, find your task on the left pane under Task Scheduler Library.
 Right-click the task and click Run to see if PHP-CGI starts successfully.
 
+# Steps to Auto-Start Nginx via Task Scheduler
+
+## 1. Open Task Scheduler:
+- Press `Win + R`, type `taskschd.msc`, and hit **Enter**.
+
+## 2. Create a Basic Task:
+- In the Actions pane, click **Create Basic Task**.
+- **Name**: `Start Nginx on Boot`.
+- **Description**: (Optional) e.g., "Start Nginx at system startup".
+
+## 3. Set Trigger:
+- **Trigger**: Select **When the computer starts** (this ensures Nginx runs even without a user login).
+
+## 4. Define Action:
+- **Action**: Choose **Start a program**.
+- **Program/script**: Browse to your `nginx.exe` (e.g., `C:\nginx\nginx.exe`).
+- **Optional arguments**: Leave this blank unless you need specific flags (e.g., `-c conf\nginx.conf`).
+- **Start in (directory)**: Set to your Nginx root folder (e.g., `C:\nginx`).
+
+## 5. Task Scheduler Action Configuration:
+
+### Configure Settings:
+- **Run with highest privileges**: Check this to avoid permission issues.
+
+### Under **Conditions** Tab:
+- Uncheck **Start the task only if the computer is on AC power** (if applicable).
+
+### Under **Settings** Tab:
+- Check **Run task as soon as possible after a scheduled start is missed** (for reliability).
+
+## 6. Finalize:
+- Click **Finish** to complete the task setup.
 
 ## Step 4: Configure Nginx to Use PHP-FPM
 
