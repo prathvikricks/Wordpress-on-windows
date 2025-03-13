@@ -148,24 +148,59 @@ Right-click the task and click Run to see if PHP-CGI starts successfully.
 1. Open the Nginx configuration file `nginx.conf` or create a new file (e.g., `wordpress.conf`) in the `C:\nginx\conf\` folder.
 2. Add a new server block to handle WordPress requests:
     ```nginx
-    server {
-        listen 80;
-        server_name localhost;
+server {
+    listen 80;
+    server_name localhost;
 
-        root C:/path/to/your/wordpress/directory;
-        index index.php index.html index.htm;
+    root C:/wordpress/lntcmb;
+    index index.php index.html index.htm;
 
-        location / {
-            try_files $uri $uri/ =404;
-        }
+    server_tokens off;  # Hide Nginx version
 
-        location ~ \.php$ {
-            fastcgi_pass 127.0.0.1:9000;
-            fastcgi_index index.php;
-            fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-            include fastcgi_params;
-        }
+    access_log C:/nginx/logs/access.log;
+    error_log C:/nginx/logs/error.log;
+
+    location / {
+        try_files $uri $uri/ /index.php?q=$uri&$args;
+        index index.php;
     }
+
+    location ~ \.php$ {
+        fastcgi_buffers 8 256k;
+        fastcgi_buffer_size 128k;
+        fastcgi_intercept_errors on;
+        include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_pass 127.0.0.1:9000;  # Keep this for Windows PHP-FPM
+    }
+
+    location ~* \.(ogg|ogv|svg|svgz|eot|otf|woff|mp4|ttf|css|rss|atom|js|jpg|jpeg|gif|png|ico|zip|tgz|gz|rar|bz2|doc|xls|exe|ppt|tar|mid|midi|wav|bmp|rtf)$ {
+        expires max;
+        log_not_found off;
+        access_log off;
+    }
+
+    location ~ /\.(?!well-known).* {
+        deny all;
+    }
+
+    add_header X-Frame-Options "SAMEORIGIN";
+    add_header X-XSS-Protection "1; mode=block";
+    add_header X-Content-Type-Options "nosniff";
+
+    gzip on;
+    gzip_disable "msie6";
+    gzip_vary on;
+    gzip_proxied any;
+    gzip_comp_level 6;
+    gzip_min_length 1100;
+    gzip_buffers 16 8k;
+    gzip_http_version 1.1;
+    gzip_types text/plain text/css text/js text/xml text/javascript application/javascript application/x-javascript application/json application/xml application/rss+xml image/svg+xml/javascript;
+
+    client_max_body_size 100M;
+}
+
     ```
 Add this is nginx.conf
 ```bash
