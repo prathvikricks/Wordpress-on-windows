@@ -147,7 +147,7 @@ Right-click the task and click Run to see if PHP-CGI starts successfully.
 
 1. Open the Nginx configuration file `nginx.conf` or create a new file (e.g., `wordpress.conf`) in the `C:\nginx\conf\` folder.
 2. Add a new server block to handle WordPress requests:
-    ```nginx
+```
 server {
     listen 80;
     server_name localhost;
